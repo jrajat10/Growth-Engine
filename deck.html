@@ -1,0 +1,702 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Replit Growth Engine — Project Deck</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg:       #0d0f14;
+    --surface:  #13161e;
+    --border:   #1f2435;
+    --accent:   #f26522;
+    --accent2:  #e85d04;
+    --text:     #e8eaf0;
+    --muted:    #7c8399;
+    --green:    #22c55e;
+    --red:      #ef4444;
+    --blue:     #3b82f6;
+    --yellow:   #f59e0b;
+  }
+
+  html, body {
+    height: 100%;
+    background: var(--bg);
+    font-family: 'Inter', system-ui, sans-serif;
+    color: var(--text);
+    overflow: hidden;
+  }
+
+  /* ── SLIDE CONTAINER ───────────────────────────── */
+  .deck { width: 100vw; height: 100vh; position: relative; }
+
+  .slide {
+    position: absolute;
+    inset: 0;
+    display: none;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    padding: 64px 80px;
+    opacity: 0;
+    transition: opacity 0.35s ease;
+  }
+  .slide.active { display: flex; opacity: 1; }
+
+  /* ── SLIDE NUMBER ───────────────────────────────── */
+  .slide-num {
+    position: absolute;
+    bottom: 32px;
+    right: 48px;
+    font-size: 12px;
+    color: var(--muted);
+    letter-spacing: 1px;
+  }
+
+  /* ── PROGRESS BAR ───────────────────────────────── */
+  .progress-bar {
+    position: fixed;
+    top: 0; left: 0;
+    height: 3px;
+    background: var(--accent);
+    transition: width 0.35s ease;
+    z-index: 100;
+  }
+
+  /* ── NAV BUTTONS ────────────────────────────────── */
+  .nav {
+    position: fixed;
+    bottom: 28px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 12px;
+    z-index: 100;
+  }
+  .nav button {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    color: var(--text);
+    padding: 8px 24px;
+    border-radius: 6px;
+    font-size: 13px;
+    font-family: inherit;
+    cursor: pointer;
+    transition: background 0.2s, border-color 0.2s;
+  }
+  .nav button:hover { background: var(--border); border-color: var(--accent); }
+  .nav button:disabled { opacity: 0.3; cursor: default; }
+
+  /* ── LOGO / BRAND MARK ──────────────────────────── */
+  .brand {
+    position: fixed;
+    top: 28px;
+    left: 48px;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--muted);
+    letter-spacing: 0.5px;
+  }
+  .brand span { color: var(--accent); }
+
+  /* ── TYPOGRAPHY ─────────────────────────────────── */
+  .eyebrow {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 2.5px;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 16px;
+  }
+
+  h1 { font-size: 52px; font-weight: 700; line-height: 1.1; margin-bottom: 20px; }
+  h1 em { font-style: normal; color: var(--accent); }
+
+  h2 { font-size: 36px; font-weight: 700; line-height: 1.15; margin-bottom: 8px; }
+  h2 em { font-style: normal; color: var(--accent); }
+
+  .subtitle {
+    font-size: 18px;
+    color: var(--muted);
+    line-height: 1.6;
+    max-width: 680px;
+    margin-bottom: 40px;
+  }
+
+  .section-sub {
+    font-size: 14px;
+    color: var(--muted);
+    margin-bottom: 32px;
+    line-height: 1.5;
+    max-width: 720px;
+  }
+
+  /* ── DIVIDER ────────────────────────────────────── */
+  .divider {
+    width: 48px;
+    height: 3px;
+    background: var(--accent);
+    border-radius: 2px;
+    margin-bottom: 32px;
+  }
+
+  /* ── CARDS ──────────────────────────────────────── */
+  .cards {
+    display: grid;
+    gap: 16px;
+    width: 100%;
+  }
+  .cards.cols-2 { grid-template-columns: 1fr 1fr; }
+  .cards.cols-3 { grid-template-columns: 1fr 1fr 1fr; }
+  .cards.cols-4 { grid-template-columns: 1fr 1fr 1fr 1fr; }
+
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 22px 24px;
+    position: relative;
+  }
+  .card.accent-left { border-left: 3px solid var(--accent); }
+  .card.green-left  { border-left: 3px solid var(--green); }
+  .card.red-left    { border-left: 3px solid var(--red); }
+  .card.blue-left   { border-left: 3px solid var(--blue); }
+  .card.yellow-left { border-left: 3px solid var(--yellow); }
+
+  .card-icon {
+    font-size: 22px;
+    margin-bottom: 10px;
+    display: block;
+  }
+  .card-title {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text);
+    margin-bottom: 6px;
+  }
+  .card-body {
+    font-size: 12.5px;
+    color: var(--muted);
+    line-height: 1.6;
+  }
+
+  /* ── FLOW DIAGRAM ───────────────────────────────── */
+  .flow {
+    display: flex;
+    align-items: center;
+    gap: 0;
+    width: 100%;
+    margin-top: 8px;
+  }
+  .flow-step {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 14px 18px;
+    text-align: center;
+    flex: 1;
+  }
+  .flow-step .fs-label {
+    font-size: 10px;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 4px;
+  }
+  .flow-step .fs-title {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text);
+  }
+  .flow-arrow {
+    color: var(--accent);
+    font-size: 20px;
+    padding: 0 6px;
+    flex-shrink: 0;
+  }
+
+  /* ── LIMIT TABLE ────────────────────────────────── */
+  .limit-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    padding: 12px 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .limit-row:last-child { border-bottom: none; }
+  .limit-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    flex-shrink: 0;
+    margin-top: 5px;
+  }
+  .limit-dot.red  { background: var(--red); }
+  .limit-dot.yellow { background: var(--yellow); }
+  .limit-text { font-size: 14px; color: var(--text); line-height: 1.5; }
+  .limit-sub  { font-size: 12px; color: var(--muted); margin-top: 2px; }
+
+  /* ── ROADMAP PHASES ─────────────────────────────── */
+  .phases { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; width: 100%; }
+
+  .phase {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 20px 22px;
+  }
+  .phase-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 12px;
+  }
+  .phase-badge {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    padding: 3px 8px;
+    border-radius: 4px;
+  }
+  .phase-badge.p1 { background: rgba(59,130,246,0.15); color: var(--blue); }
+  .phase-badge.p2 { background: rgba(242,101,34,0.15); color: var(--accent); }
+  .phase-badge.p3 { background: rgba(34,197,94,0.15);  color: var(--green); }
+  .phase-badge.p4 { background: rgba(245,158,11,0.15); color: var(--yellow); }
+
+  .phase-time {
+    font-size: 11px;
+    color: var(--muted);
+    font-weight: 500;
+  }
+  .phase-title {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text);
+    margin-bottom: 10px;
+  }
+  .phase ul { list-style: none; }
+  .phase ul li {
+    font-size: 12.5px;
+    color: var(--muted);
+    padding: 3px 0;
+    padding-left: 14px;
+    position: relative;
+    line-height: 1.5;
+  }
+  .phase ul li::before {
+    content: '→';
+    position: absolute;
+    left: 0;
+    color: var(--accent);
+    font-size: 11px;
+  }
+
+  /* ── STAT BLOCKS ─────────────────────────────────── */
+  .stats { display: flex; gap: 24px; margin-bottom: 36px; }
+  .stat {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 16px 24px;
+    min-width: 140px;
+  }
+  .stat-val {
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--accent);
+    line-height: 1;
+    margin-bottom: 4px;
+  }
+  .stat-label { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; }
+
+  /* ── TWO-COL LAYOUT ─────────────────────────────── */
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; width: 100%; align-items: start; }
+
+  /* ── TAG PILLS ──────────────────────────────────── */
+  .tags { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 16px; }
+  .tag {
+    font-size: 11px;
+    font-weight: 500;
+    padding: 4px 10px;
+    border-radius: 20px;
+    border: 1px solid var(--border);
+    color: var(--muted);
+    background: var(--surface);
+  }
+
+  /* ── CLOSING SLIDE ──────────────────────────────── */
+  .closing-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 16px;
+    width: 100%;
+    margin-top: 8px;
+  }
+  .closing-item {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 18px 20px;
+    text-align: center;
+  }
+  .closing-num {
+    font-size: 32px;
+    font-weight: 700;
+    color: var(--accent);
+    margin-bottom: 4px;
+  }
+  .closing-label { font-size: 12px; color: var(--muted); }
+</style>
+</head>
+<body>
+
+<div class="brand">REPLIT <span>/ Growth Engine</span></div>
+<div class="progress-bar" id="prog"></div>
+
+<div class="deck">
+
+  <!-- ─── SLIDE 1: TITLE ──────────────────────────── -->
+  <div class="slide active" id="s1">
+    <div class="eyebrow">Project Overview</div>
+    <h1>Replit<br/><em>Growth Engine</em></h1>
+    <p class="subtitle">
+      A closed-loop, human-in-the-loop paid acquisition console.<br/>
+      Weekly budget decisions — data-driven, guardrail-enforced, human-approved.
+    </p>
+    <div class="tags">
+      <span class="tag">Python / Flask</span>
+      <span class="tag">Budget Optimizer</span>
+      <span class="tag">NL Query Engine</span>
+      <span class="tag">Decision Ledger</span>
+      <span class="tag">Consumer + Enterprise</span>
+      <span class="tag">AMER</span>
+    </div>
+    <div class="slide-num">01 / 07</div>
+  </div>
+
+  <!-- ─── SLIDE 2: PROBLEM ─────────────────────────── -->
+  <div class="slide" id="s2">
+    <div class="eyebrow">The Problem</div>
+    <h2>Growth teams make <em>$600K / week</em><br/>decisions with no system</h2>
+    <div class="divider"></div>
+    <div class="cards cols-3">
+      <div class="card red-left">
+        <span class="card-icon">⚠</span>
+        <div class="card-title">No institutional memory</div>
+        <div class="card-body">Decisions live in Slack threads and spreadsheets. The same mistakes repeat every quarter.</div>
+      </div>
+      <div class="card red-left">
+        <span class="card-icon">⚠</span>
+        <div class="card-title">Optimizing the wrong signal</div>
+        <div class="card-body">Teams look at raw conversions. Retargeting inflates counts. Real net-new efficiency is invisible.</div>
+      </div>
+      <div class="card red-left">
+        <span class="card-icon">⚠</span>
+        <div class="card-title">No guardrails</div>
+        <div class="card-body">Budget swings 40% in a week. One channel gets starved. No CAC ceiling enforced. Finance reacts after the fact.</div>
+      </div>
+    </div>
+    <p class="section-sub" style="margin-top:24px;">
+      This project replaces gut-feel allocation with a structured decisioning loop:
+      <strong style="color:var(--text)"> Data → Score → Recommend → Human Approves → Log → Repeat</strong>
+    </p>
+    <div class="slide-num">02 / 07</div>
+  </div>
+
+  <!-- ─── SLIDE 3: HOW IT WORKS ────────────────────── -->
+  <div class="slide" id="s3">
+    <div class="eyebrow">Architecture</div>
+    <h2>How the <em>system works</em></h2>
+    <div class="divider"></div>
+    <div class="flow" style="margin-bottom:32px;">
+      <div class="flow-step">
+        <div class="fs-label">Input</div>
+        <div class="fs-title">CSV / Warehouse<br/>Data</div>
+      </div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-step">
+        <div class="fs-label">Engine</div>
+        <div class="fs-title">Ingest +<br/>Score</div>
+      </div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-step">
+        <div class="fs-label">Optimizer</div>
+        <div class="fs-title">Constrained<br/>Budget Alloc</div>
+      </div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-step">
+        <div class="fs-label">Output</div>
+        <div class="fs-title">Weekly<br/>Decision Memo</div>
+      </div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-step">
+        <div class="fs-label">Human</div>
+        <div class="fs-title">Review +<br/>Approve</div>
+      </div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-step">
+        <div class="fs-label">Ledger</div>
+        <div class="fs-title">Immutable<br/>Decision Log</div>
+      </div>
+    </div>
+    <div class="cards cols-2">
+      <div class="card accent-left">
+        <div class="card-title">Two segments, fully separate tracks</div>
+        <div class="card-body">Consumer ($420K/week, $85 CAC ceiling, 6mo payback) and Enterprise ($180K/week, $450 CAC ceiling, 14mo payback) run independent optimization with different channel mixes.</div>
+      </div>
+      <div class="card accent-left">
+        <div class="card-title">Human-in-the-loop by design</div>
+        <div class="card-body">Every allocation has <code style="color:var(--accent);font-size:11px;">human_can_veto: true</code>. The system never auto-executes spend. AI recommends — human approves. The ledger records both.</div>
+      </div>
+    </div>
+    <div class="slide-num">03 / 07</div>
+  </div>
+
+  <!-- ─── SLIDE 4: CAPABILITIES ────────────────────── -->
+  <div class="slide" id="s4">
+    <div class="eyebrow">Current Capabilities</div>
+    <h2>What the project <em>can do now</em></h2>
+    <div class="divider"></div>
+    <div class="cards cols-3">
+      <div class="card green-left">
+        <span class="card-icon">📊</span>
+        <div class="card-title">Constrained Budget Optimizer</div>
+        <div class="card-body">Scores channels by net-new efficiency × LTV multiplier. Enforces floor, cap, CAC ceiling, and max 15% weekly shift. Finance sets the envelope — math decides where it goes.</div>
+      </div>
+      <div class="card green-left">
+        <span class="card-icon">📋</span>
+        <div class="card-title">Auto-Generated Weekly Brief</div>
+        <div class="card-body">Headline KPIs, top 3 priority actions ranked by impact, counterfactual ("approving last week's rec would have cut CAC 4–7%"), and pending decisions queue.</div>
+      </div>
+      <div class="card green-left">
+        <span class="card-icon">💬</span>
+        <div class="card-title">Natural Language Q&A</div>
+        <div class="card-body">20+ query patterns — "what's the worst channel?", "should we stay in LATAM?", "what experiment is ready?" Answered from live state data. Zero API cost, zero hallucination.</div>
+      </div>
+      <div class="card green-left">
+        <span class="card-icon">🗺</span>
+        <div class="card-title">Geo-Aware Scoring</div>
+        <div class="card-body">ARPU multipliers per region (LATAM 0.45×, US West 1.15×). A cheap LATAM CAC still loses to a pricier US West CAC after LTV adjustment — the optimizer knows this.</div>
+      </div>
+      <div class="card green-left">
+        <span class="card-icon">🧪</span>
+        <div class="card-title">Experiment Tracking</div>
+        <div class="card-body">Tracks A/B tests and geo holdouts. Surfaces p-value, lift %, and recommendation (ship / stop / keep running) directly in the weekly brief.</div>
+      </div>
+      <div class="card green-left">
+        <span class="card-icon">📁</span>
+        <div class="card-title">Immutable Decision Ledger</div>
+        <div class="card-body">Every approval written as append-only JSONL — never overwritten. Captures segment, week, recommended allocation, human action, and timestamp. Compounding institutional memory.</div>
+      </div>
+    </div>
+    <div class="slide-num">04 / 07</div>
+  </div>
+
+  <!-- ─── SLIDE 5: LIMITATIONS ─────────────────────── -->
+  <div class="slide" id="s5">
+    <div class="eyebrow">Honest Assessment</div>
+    <h2>What the project <em>cannot do yet</em></h2>
+    <div class="divider"></div>
+    <div class="two-col">
+      <div>
+        <div class="limit-row">
+          <div class="limit-dot red"></div>
+          <div>
+            <div class="limit-text">No live data connection</div>
+            <div class="limit-sub">Runs on CSV sample fixtures. Not wired to Google Ads API, Meta API, LinkedIn, or any data warehouse (Snowflake / BigQuery).</div>
+          </div>
+        </div>
+        <div class="limit-row">
+          <div class="limit-dot red"></div>
+          <div>
+            <div class="limit-text">No authentication or access control</div>
+            <div class="limit-sub">Single-user, no RBAC. Anyone with the URL can approve decisions.</div>
+          </div>
+        </div>
+        <div class="limit-row">
+          <div class="limit-dot red"></div>
+          <div>
+            <div class="limit-text">NL query is pattern-matching, not conversational</div>
+            <div class="limit-sub">20 hardcoded patterns. Questions outside those patterns get a generic fallback — not true natural language understanding.</div>
+          </div>
+        </div>
+      </div>
+      <div>
+        <div class="limit-row">
+          <div class="limit-dot yellow"></div>
+          <div>
+            <div class="limit-text">Optimizer uses heuristic scoring, not ML</div>
+            <div class="limit-sub">Efficiency × LTV × CAC penalty — transparent and explainable, but not a trained model. No predictive power on future channels.</div>
+          </div>
+        </div>
+        <div class="limit-row">
+          <div class="limit-dot yellow"></div>
+          <div>
+            <div class="limit-text">Attribution is last-touch only</div>
+            <div class="limit-sub">Markov chain attribution is scaffolded but not implemented. Multi-touch credit is not yet distributed correctly.</div>
+          </div>
+        </div>
+        <div class="limit-row">
+          <div class="limit-dot yellow"></div>
+          <div>
+            <div class="limit-text">No trend forecasting</div>
+            <div class="limit-sub">Trends API endpoint exists, but no ML model underneath. Historical data shown — forward projections not generated.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="slide-num">05 / 07</div>
+  </div>
+
+  <!-- ─── SLIDE 6: ROADMAP ──────────────────────────── -->
+  <div class="slide" id="s6">
+    <div class="eyebrow">Future Vision</div>
+    <h2>Roadmap — <em>4 phases</em></h2>
+    <div class="divider"></div>
+    <div class="phases">
+      <div class="phase">
+        <div class="phase-header">
+          <span class="phase-badge p1">Phase 1</span>
+          <span class="phase-time">0 – 3 months</span>
+        </div>
+        <div class="phase-title">Live Data Wires</div>
+        <ul>
+          <li>Connect Google Ads, Meta & LinkedIn APIs</li>
+          <li>Replace CSV fixtures with Snowflake / BigQuery reads</li>
+          <li>Daily data refresh, not weekly snapshots</li>
+          <li>OAuth login + role-based access control</li>
+          <li>Slack / email weekly brief delivery</li>
+        </ul>
+      </div>
+      <div class="phase">
+        <div class="phase-header">
+          <span class="phase-badge p2">Phase 2</span>
+          <span class="phase-time">3 – 6 months</span>
+        </div>
+        <div class="phase-title">ML Scoring Layer</div>
+        <ul>
+          <li>Train a proper channel efficiency model (Bayesian MMM or gradient boosted)</li>
+          <li>Feed ML scores into existing <code style="font-size:11px;color:var(--accent);">model_scores</code> hook — guardrails unchanged</li>
+          <li>Markov chain multi-touch attribution (already scaffolded)</li>
+          <li>Incrementality measurement via geo holdouts</li>
+          <li>LLM-powered conversational Q&A replacing regex patterns</li>
+        </ul>
+      </div>
+      <div class="phase">
+        <div class="phase-header">
+          <span class="phase-badge p3">Phase 3</span>
+          <span class="phase-time">6 – 12 months</span>
+        </div>
+        <div class="phase-title">Full Decisioning Loop</div>
+        <ul>
+          <li>Auto-execute micro-adjustments (&lt;5% shift) without human sign-off</li>
+          <li>Large shifts still require approval — trust ladder</li>
+          <li>Predictive budget forecasting ("approve this for 4 weeks → projected CAC $X")</li>
+          <li>Experiment orchestration: auto-launch holdouts, auto-call at p &lt; 0.05</li>
+          <li>Creative fatigue wired to platform frequency cap APIs</li>
+        </ul>
+      </div>
+      <div class="phase">
+        <div class="phase-header">
+          <span class="phase-badge p4">Phase 4</span>
+          <span class="phase-time">12+ months</span>
+        </div>
+        <div class="phase-title">Scale & Intelligence</div>
+        <ul>
+          <li>EMEA and APAC segment support</li>
+          <li>Budget scenario planning ("what if envelope +20%?")</li>
+          <li>Competitive intelligence feeds (SimilarWeb, SEMrush) wired to competition module</li>
+          <li>Shapley value attribution replacing heuristic</li>
+          <li>LTV model connected to real product cohort retention data</li>
+        </ul>
+      </div>
+    </div>
+    <div class="slide-num">06 / 07</div>
+  </div>
+
+  <!-- ─── SLIDE 7: SUMMARY ──────────────────────────── -->
+  <div class="slide" id="s7">
+    <div class="eyebrow">Summary</div>
+    <h2>Built for <em>compounding advantage</em></h2>
+    <div class="divider"></div>
+    <p class="section-sub">
+      Every week the system runs, it gets smarter. The ledger captures every decision and outcome.
+      The optimizer learns from what was approved. The team builds intuition on top of audit-ready data —
+      not gut feel.
+    </p>
+    <div class="closing-grid">
+      <div class="closing-item">
+        <div class="closing-num">$600K</div>
+        <div class="closing-label">Weekly budget under management</div>
+      </div>
+      <div class="closing-item">
+        <div class="closing-num">9</div>
+        <div class="closing-label">Channels scored and ranked every week</div>
+      </div>
+      <div class="closing-item">
+        <div class="closing-num">5</div>
+        <div class="closing-label">Finance guardrails enforced automatically</div>
+      </div>
+      <div class="closing-item">
+        <div class="closing-num">20+</div>
+        <div class="closing-label">Query patterns answered from live state</div>
+      </div>
+      <div class="closing-item">
+        <div class="closing-num">0</div>
+        <div class="closing-label">Decisions auto-executed without human approval</div>
+      </div>
+      <div class="closing-item">
+        <div class="closing-num">∞</div>
+        <div class="closing-label">Decision history — append-only, never deleted</div>
+      </div>
+    </div>
+    <div class="tags" style="margin-top:28px;">
+      <span class="tag">Flask · Python</span>
+      <span class="tag">Greedy LP Optimizer</span>
+      <span class="tag">JSONL Ledger</span>
+      <span class="tag">NL Pattern Engine</span>
+      <span class="tag">Segment-Aware</span>
+      <span class="tag">Geo ARPU Weighting</span>
+      <span class="tag">Extensible to ML</span>
+    </div>
+    <div class="slide-num">07 / 07</div>
+  </div>
+
+</div><!-- /deck -->
+
+<!-- ── NAVIGATION ────────────────────────────────── -->
+<div class="nav">
+  <button id="prev" onclick="go(-1)" disabled>← Prev</button>
+  <button id="next" onclick="go(1)">Next →</button>
+</div>
+
+<script>
+  const slides = document.querySelectorAll('.slide');
+  const total  = slides.length;
+  let cur = 0;
+
+  function show(n) {
+    slides[cur].classList.remove('active');
+    cur = Math.max(0, Math.min(n, total - 1));
+    slides[cur].classList.add('active');
+    document.getElementById('prev').disabled = cur === 0;
+    document.getElementById('next').disabled = cur === total - 1;
+    document.getElementById('prog').style.width = ((cur + 1) / total * 100) + '%';
+  }
+
+  function go(d) { show(cur + d); }
+
+  document.addEventListener('keydown', e => {
+    if (e.key === 'ArrowRight' || e.key === 'ArrowDown' || e.key === ' ') go(1);
+    if (e.key === 'ArrowLeft'  || e.key === 'ArrowUp')                     go(-1);
+  });
+
+  show(0);
+</script>
+</body>
+</html>
