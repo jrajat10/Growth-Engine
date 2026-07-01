@@ -1,13 +1,4 @@
-/* ── Replit brand fonts (served from Replit CDN, system fallback) ── */
-@font-face {
-  font-family: "ABC Diatype Plus";
-  src: url("https://cdn.replit.com/dotcom/fonts/ABCDiatypePlusVariable.woff2") format("woff2");
-  font-weight: 100 900;
-  font-style: normal;
-  font-display: swap;
-}
-
-/* ── Design tokens — Replit 2026 brand (warm charcoal + #FF3C00) ── */
+/* ── Design tokens — warm charcoal + #FF3C00 ── */
 :root {
   /* Backgrounds — layered elevation (warm charcoal, not blue-black) */
   --bg:          #161617;
@@ -26,7 +17,7 @@
   --text-2:      #b5b5bb;
   --muted:       #76767e;
 
-  /* Brand — Replit primary #FF3C00 */
+  /* Brand — primary #FF3C00 */
   --orange:      #ff3c00;
   --orange-2:    #e03500;
   --orange-bg:   rgba(255, 60, 0, 0.08);
@@ -57,11 +48,11 @@
   --sidebar-w:   220px;
   --topbar-h:    48px;
 
-  /* Typography — Replit uses ABC Diatype Plus + JetBrains Mono */
-  --font:      "ABC Diatype Plus", "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
+  /* Typography */
+  --font:      "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
   --font-mono: "JetBrains Mono", "Fira Code", "Cascadia Code", "Consolas", monospace;
 
-  /* Radii — Replit favors generous rounding (rounded-2xl on cards) */
+  /* Radii */
   --r-xs: 6px;
   --r:    8px;
   --r-md: 10px;

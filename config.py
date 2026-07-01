@@ -63,12 +63,12 @@ FINANCE_GUARDRAILS = {
 }
 
 BRAND_DIRECTIVES = {
-    "speed_demo": "Show idea → live app in under 2 minutes",
-    "no_code_promise": "No coding needed — plain English in, app out",
-    "enterprise_proof": "Logo grid + customer proof (Duolingo, Coinbase)",
+    "speed_demo": "Show idea → live product in under 2 minutes",
+    "no_code_promise": "No expertise needed — plain English in, output delivered",
+    "enterprise_proof": "Logo grid + customer proof (enterprise reference customers)",
     "creator_ugc": "Authentic creator voice, not polished ad",
     "build_one_sentence": "Build anything in one sentence — matches homepage prompt UX",
-    "first_prompt_free": "Your first prompt is free — no credit consumption",
+    "first_prompt_free": "Your first use is free — no commitment",
 }
 
 GEO_ARPU_MULTIPLIER = {
@@ -88,8 +88,8 @@ QUARTER_LABEL = "Q3 2026"
 QUARTER_START = "2026-04-14"  # Monday W1 (latest sample week lands ~W10, 3 weeks left)
 QUARTER_WEEKS = 13
 
-# Seasonal pacing curve — channels ramp toward an offline event
-# (e.g. ReplitCON) in W7, then taper to quarter close. Weights sum-normalized.
+# Seasonal pacing curve — channels ramp toward an offline event in W7,
+# then taper to quarter close. Weights sum-normalized.
 # Drives both planned-spend distribution and target-signup distribution.
 PACING_CURVE_RAW = [
     0.060,  # W1
@@ -98,7 +98,7 @@ PACING_CURVE_RAW = [
     0.080,  # W4
     0.095,  # W5
     0.110,  # W6
-    0.130,  # W7  ← peak: ReplitCON / offline event
+    0.130,  # W7  ← peak: Annual Conference / offline event
     0.110,  # W8
     0.090,  # W9
     0.075,  # W10
@@ -109,7 +109,7 @@ PACING_CURVE_RAW = [
 _total = sum(PACING_CURVE_RAW)
 PACING_CURVE = [w / _total for w in PACING_CURVE_RAW]
 PACING_EVENT_WEEK = 7
-PACING_EVENT_NAME = "ReplitCON (offline event, ramp peak)"
+PACING_EVENT_NAME = "Annual Conference (offline event, ramp peak)"
 
 # Top-line targets — set by Finance + GTM leadership.
 # Consumer = ARR-driven self-serve. Enterprise = pipeline-driven sales-assisted.
@@ -139,12 +139,12 @@ QUARTERLY_TARGETS = {
 
 # Landing page message map (for ad→LP continuity scoring)
 HOMEPAGE_MESSAGES = {
-    "hero": "What will you build?",
-    "subhead": "Turn ideas into apps in minutes — no coding needed",
-    "risk_reducer": "Your first prompt is free. No credit consumption.",
-    "product": "Agent 4",
+    "hero": "What will you create?",
+    "subhead": "Turn ideas into products in minutes — no expertise needed",
+    "risk_reducer": "Your first use is free. No commitment.",
+    "product": "Core Product",
     "example_prompts": [
-        "B2B project management app",
+        "B2B project management tool",
         "Freelance client portal",
         "AI sales assistant",
     ],
@@ -166,8 +166,8 @@ PAID_CAMPAIGNS = [
         "creative_format": "image",
         "creative_theme": "BuildAnythingOneSentence",
         "creative_type": "static",
-        "landing_url": "https://replit.com/",
-        "landing_message": "What will you build? — one-sentence prompt → app",
+        "landing_url": "https://yourapp.com/",
+        "landing_message": "What will you create? — one-sentence prompt → product",
         "message_match_score": 0.95,
         "status": "active",
     },
@@ -185,7 +185,7 @@ PAID_CAMPAIGNS = [
         "creative_format": "unknown",
         "creative_theme": "unknown",
         "creative_type": "unknown",
-        "landing_url": "https://replit.com/",
+        "landing_url": "https://yourapp.com/",
         "landing_message": "Generic homepage — no utm_content theme tag",
         "message_match_score": 0.70,
         "status": "active",

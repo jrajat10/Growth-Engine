@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Growth Intelligence — Replit</title>
+  <title>Growth Intelligence</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
@@ -21,10 +21,10 @@
   <!-- Sidebar -->
   <aside class="sidebar">
     <div class="sidebar-brand">
-      <div class="brand-mark">R</div>
+      <div class="brand-mark">G</div>
       <div class="brand-info">
-        <div class="brand-name">Replit</div>
-        <div class="brand-product">Growth Intelligence</div>
+        <div class="brand-name">Growth</div>
+        <div class="brand-product">Intelligence</div>
       </div>
     </div>
 
@@ -92,7 +92,7 @@
       </div>
       <div class="topbar-right">
         <div class="segment-toggle" id="segment-toggle">
-          <button data-segment="consumer" class="active">Consumer / PLG</button>
+          <button data-segment="consumer" class="active">Consumer</button>
           <button data-segment="enterprise">Enterprise</button>
         </div>
       </div>
@@ -154,7 +154,7 @@
         <div class="page-header">
           <div class="section-eyebrow">MONDAY ALLOCATION REVIEW</div>
           <h1 class="page-title">Budget Optimization</h1>
-          <p class="page-subtitle">Finance sets the weekly investment envelope. The engine ranks channels by net-new efficiency per dollar—adjusted for diminishing returns and holdout-proven incrementality—within CAC and stability guardrails. Recommendations are advisory and require approval before deployment.</p>
+          <p class="page-subtitle">Finance sets the weekly budget. The engine ranks every channel by efficiency — accounting for diminishing returns and proven incrementality — within cost and stability guardrails. All recommendations require your approval before taking effect.</p>
         </div>
 
         <div class="alloc-summary-card" id="alloc-summary"></div>
@@ -229,7 +229,7 @@
 
         <div class="panel-block">
           <div class="panel-block-label">GEO DECOMPOSITION</div>
-          <p class="panel-note">Decompose before diagnosing the aggregate. LATAM CPM efficiency does not translate to net-new user quality.</p>
+          <p class="panel-note">Break down performance by region before drawing conclusions from the aggregate. Low-cost impressions in some markets don't always translate to quality users.</p>
           <table class="data-table" id="geo-table">
             <thead>
               <tr><th>Geo</th><th>Spend</th><th>Net-new Conv</th><th>CAC</th><th>ARPU Mult</th><th>Flag</th></tr>
@@ -249,8 +249,8 @@
       <section id="tab-funnel" class="tab-panel">
         <div class="page-header">
           <div class="section-eyebrow">FUNNEL</div>
-          <h1 class="page-title">Visit &rarr; Prompt &rarr; Signup &rarr; Activated &rarr; Paid</h1>
-          <p class="page-subtitle">CAC reflects cost per signup; qCAC reflects cost per paying user. The allocator optimizes against the leading signal, while the funnel and Free-to-Paid forecast govern conversion quality downstream.</p>
+          <h1 class="page-title">Visit &rarr; Signup &rarr; Activated &rarr; Paid</h1>
+          <p class="page-subtitle">CAC is cost per signup. Quality-CAC (qCAC) is cost per paying user. Track where volume is won and where quality is lost across every stage of the funnel.</p>
         </div>
 
         <div class="kpi-row" id="funnel-kpi-row"></div>
@@ -341,7 +341,7 @@
 
         <div class="panel-block" id="pacing-waterfall-box">
           <div class="panel-block-label">ARR → CHANNEL SIGNUP WATERFALL (REVERSE-ENGINEERED)</div>
-          <p class="panel-note">Top-line target decomposed into per-channel signup targets using historical attribution share. Edit ARR / Free→Paid / Activation to stress-test sensitivity.</p>
+          <p class="panel-note">Top-line revenue target broken down into per-channel signup goals using historical attribution. Adjust the inputs below to stress-test different scenarios.</p>
           <div class="waterfall-controls">
             <label>ARR Target ($) <input type="number" id="ctrl-arr" min="100000" max="10000000" step="50000"/></label>
             <label>Free→Paid (%) <input type="number" id="ctrl-f2p" min="1" max="20" step="0.1"/></label>
@@ -385,7 +385,7 @@
         <div class="page-header">
           <div class="section-eyebrow">EXPERIMENTS</div>
           <h1 class="page-title">Incrementality &amp; A/B Testing</h1>
-          <p class="page-subtitle">Geo holdouts establish causal incrementality, and A/B tests evaluate creative and landing variants. Budget reallocation is gated on holdout evidence rather than attribution alone.</p>
+          <p class="page-subtitle">Geo holdouts establish what's actually driving growth, and A/B tests evaluate creative and landing page variants. Budget decisions are gated on causal evidence — not just attribution.</p>
         </div>
         <div id="experiments-list"></div>
 
@@ -396,8 +396,8 @@
       <section id="tab-creatives" class="tab-panel">
         <div class="page-header">
           <div class="section-eyebrow">CREATIVE INTELLIGENCE</div>
-          <h1 class="page-title">Insight Cards → Brand</h1>
-          <p class="page-subtitle">The engine evaluates Brand-approved directives and returns data-backed insight cards. Creative and copy decisions remain owned by the Brand team.</p>
+          <h1 class="page-title">Creative Insights</h1>
+          <p class="page-subtitle">Data-backed signals on what's working across creative formats and themes. The engine surfaces the insight — your team decides the next move.</p>
         </div>
         <div id="insight-cards"></div>
 
@@ -408,30 +408,14 @@
       <section id="tab-data" class="tab-panel">
         <div class="page-header">
           <div class="section-eyebrow">SYSTEM</div>
-          <h1 class="page-title">Integration Status</h1>
+          <h1 class="page-title">Data &amp; Status</h1>
+          <p class="page-subtitle">Live status of all connected data sources. The engine refreshes automatically each week.</p>
         </div>
         <div class="system-grid">
           <div class="panel-block" id="data-status"></div>
           <div class="panel-block" id="model-status"></div>
         </div>
-        <div class="panel-block">
-          <div class="panel-block-label">WAREHOUSE CONTRACT</div>
-          <pre class="code-block">fct_paid_performance (weekly grain) — DE / dbt
-ml_channel_scores (weekly × segment × channel) — DS team
-
-  week_start, segment, channel,
-  predicted_net_new_per_dollar, predicted_ltv,
-  efficiency_score, confidence, model_version, scored_at
-
-fct_conversion_paths       — attribution diagnostic
-dim_experiments
-  + fct_experiment_results — incrementality
-dim_creative
-  + fct_creative_performance — fatigue + Brand insights
-
-Swap sample → live: engine/datasource.py only.</pre>
-        </div>
-        <button id="resync-btn" class="btn">Re-sync from Source</button>
+        <button id="resync-btn" class="btn">Refresh Data</button>
       </section>
 
     </main>

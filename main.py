@@ -30,7 +30,6 @@ def bootstrap():
 if __name__ == "__main__":
     bootstrap()
     port = int(os.environ.get("PORT", 5000))
-    # Replit sets PORT; disable debug reload in published deployments
-    debug = os.environ.get("REPLIT_DEPLOYMENT") != "1"
-    print(f"Replit Growth Engine -> http://0.0.0.0:{port}")
+    debug = os.environ.get("PROD_DEPLOYMENT") != "1"
+    print(f"Growth Intelligence -> http://0.0.0.0:{port}")
     app.run(host="0.0.0.0", port=port, debug=debug)

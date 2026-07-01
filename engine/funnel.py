@@ -1,7 +1,7 @@
 """
 Funnel module — multi-stage conversion + quality-adjusted CAC + Free->Paid forecast.
 
-Stages (Replit 2026 funnel):
+Stages:
     visits -> prompt_starts -> signups -> activated_first_app -> paid_conversions
 
 The allocator continues to optimize on net-new signups (short-loop) — funnel data
@@ -26,7 +26,7 @@ QCAC_DEFINITION = (
     "qCAC = spend / paid_conversions (4-week trailing cohort). "
     "Standard CAC = spend / signups. Showing both makes quality gap visible."
 )
-PAID_LAG_WEEKS = 4  # typical Free->Paid lag for Replit Core/Pro
+PAID_LAG_WEEKS = 4  # typical Free->Paid lag (4-week trailing cohort)
 
 
 def _agg_week(rows: list[dict], segment: str, week_start: str) -> dict:

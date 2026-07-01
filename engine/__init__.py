@@ -1,1 +1,1 @@
-"""Replit Growth Engine — decisioning modules."""
+"""Growth Intelligence — decisioning modules."""

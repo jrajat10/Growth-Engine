@@ -20,7 +20,7 @@ def parse_utm_url(url: str) -> dict[str, str]:
 
 def decode_creative_taxonomy(utm_content: str) -> dict[str, str]:
     """
-    Parse Replit-style utm_content tags.
+    Parse utm_content tags.
     Example: '[Image] [BuildAnythingOneSentence] [Static]'
     """
     parts = [p.strip("[] ") for p in utm_content.replace("][", "] [").split("[") if p.strip("] ")]

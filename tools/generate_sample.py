@@ -20,7 +20,7 @@ WEEKS = 14
 
 # Align sample data with Q3 2026 quarter (starts 2026-04-07 = W4 of sample).
 # Apply the same seasonal pacing curve to actual spend so the pacing tab tells
-# a coherent story: ramp into ReplitCON in W7-of-quarter, then taper.
+# a coherent story: ramp into the offline event in W7-of-quarter, then taper.
 QUARTER_START_DATE = date.fromisoformat(config.QUARTER_START)
 
 
@@ -275,11 +275,11 @@ def generate_funnel_events(perf_rows):
     """
     fct_funnel_events: weekly x segment x channel x geo, multi-stage funnel.
 
-    Stages reflect Replit's actual 2026 funnel:
+    Stages:
       visits -> prompt_starts (landing intent)
-              -> signups (forced auth after prompt)
-              -> activated_first_app (first published deploy within 7d)
-              -> paid_conversions (free -> Core/Pro)
+              -> signups (auth after prompt)
+              -> activated_first_app (first publish within 7d)
+              -> paid_conversions (free -> paid)
 
     Conversion rates are channel-aware: TikTok drives volume but weak
     activation; LinkedIn ABM small volume, high activation -> paid.
@@ -295,9 +295,9 @@ def generate_funnel_events(perf_rows):
         "linkedin_abm": 0.71,
         "linkedin_retarget": 0.58,
     }
-    # activated -> paid (of activated users). Engaged users (published an app in
-    # 7d) convert far higher than raw signups. Calibrated so blended qCAC lands in
-    # a believable range for Replit's ARPU (Core + Pro + usage) and LTV.
+    # activated -> paid (of activated users). Engaged users (published within 7d)
+    # convert far higher than raw signups. Calibrated so blended qCAC lands in
+    # a believable range for product ARPU and LTV.
     paid_rate = {
         "google_brand": 0.34,
         "google_nonbrand": 0.27,
@@ -399,7 +399,7 @@ def generate_competitor_signals():
             "confidence": "0.78",
             "source": "SimilarWeb (manual capture, 2026-06-19)",
             "interpretation": "Lovable expanded non-brand bids on vibe-coding keywords",
-            "implication": "Replit CAC inflation likely market-driven, not funnel-driven",
+            "implication": "CAC inflation likely market-driven, not funnel-driven",
         },
         {
             "signal_id": "cs_002",
@@ -411,7 +411,7 @@ def generate_competitor_signals():
             "confidence": "0.65",
             "source": "Meta Ad Library (manual capture, 2026-06-20)",
             "interpretation": "v0 ramping Meta prospecting alongside v0.dev->v0.app rebrand",
-            "implication": "Watch IG/FB CPM uplift; defend Replit Meta prospecting spend",
+            "implication": "Watch IG/FB CPM uplift; defend Meta prospecting spend",
         },
         {
             "signal_id": "cs_003",

@@ -415,7 +415,7 @@ function renderPaidCampaigns() {
   const lp = pc.landing_page || {};
   box.innerHTML = `
     <div class="panel-block-label">LIVE INSTAGRAM CAMPAIGNS (UTM CAPTURE)</div>
-    <p class="panel-note">Decoded from live ad links · ${pc.source_medium || "ig / paid"} · LP: ${lp.hero || "replit.com"}</p>
+    <p class="panel-note">Decoded from live ad links · ${pc.source_medium || "ig / paid"} · LP: ${lp.hero || "yourapp.com"}</p>
     ${pc.insights?.map(i => `<div class="alert alert-medium" style="margin-bottom:8px">${i}</div>`).join("") || ""}
     ${pc.campaigns.map(c => `
       <div class="decision-card" style="margin-top:12px">
@@ -544,7 +544,7 @@ function renderFunnel() {
     { label: "qCAC",           value: `$${Math.round(f.qcac).toLocaleString()}`, sub: `${f.qcac_to_cac_ratio}× CAC — spend / paid` },
     { label: "Activation Rate",value: `${f.activation_rate}%`,                  sub: "signup → published in 7d" },
     { label: "Free→Paid",      value: `${f.free_to_paid_rate}%`,                sub: "of activated users" },
-    { label: "Prompt-Start",   value: `${f.prompt_start_rate}%`,                sub: "of landing visits" },
+    { label: "Engagement Rate", value: `${f.prompt_start_rate}%`,                sub: "of landing visits" },
   ];
   document.getElementById("funnel-kpi-row").innerHTML = tiles.map(t => `
     <div class="kpi">
@@ -1110,20 +1110,17 @@ function renderData() {
   const m = state.model || {};
 
   document.getElementById("data-status").innerHTML = `
-    <div class="panel-block-label">WAREHOUSE CONNECTION</div>
+    <div class="panel-block-label">DATA SOURCE</div>
     <p style="font-size:13px;margin-bottom:5px"><strong>Source:</strong> ${ds.label}</p>
-    <p style="font-size:13px;margin-bottom:5px"><strong>Path:</strong> ${ds.path}</p>
-    <p style="font-size:13px"><strong>Status:</strong> ${ds.connected ? "Connected" : "Disconnected"}</p>`;
+    <p style="font-size:13px"><strong>Status:</strong> ${ds.connected ? "✓ Connected" : "Disconnected"}</p>`;
 
   document.getElementById("model-status").innerHTML = m.available
-    ? `<div class="panel-block-label">DS MODEL</div>
+    ? `<div class="panel-block-label">AI SCORING MODEL</div>
        <p style="font-size:13px;margin-bottom:5px"><strong>Version:</strong> ${m.version}</p>
-       <p style="font-size:13px;margin-bottom:5px"><strong>Source:</strong> ${m.source}</p>
-       <p style="font-size:13px;margin-bottom:8px"><strong>Scored:</strong> ${m.scored_at || "—"}</p>
-       <p style="font-size:12px;color:var(--text-2);line-height:1.55">Allocator uses DS efficiency_score when confidence ≥ 50%; heuristic fallback otherwise.</p>`
-    : `<div class="panel-block-label">DS MODEL</div>
-       <p style="font-size:13px;margin-bottom:6px">Model not available — allocator running heuristic (net-new/$ × LTV).</p>
-       <p style="font-size:12px;color:var(--muted)">DS team publishes to ml_channel_scores weekly.</p>`;
+       <p style="font-size:13px;margin-bottom:8px"><strong>Last scored:</strong> ${m.scored_at || "—"}</p>
+       <p style="font-size:12px;color:var(--text-2);line-height:1.55">Channel recommendations use AI-scored efficiency when confidence is sufficient; rule-based scoring otherwise.</p>`
+    : `<div class="panel-block-label">AI SCORING MODEL</div>
+       <p style="font-size:13px;margin-bottom:6px">AI model not available — using rule-based channel scoring.</p>`;
 }
 
 // ── TABS ──────────────────────────────────────────
